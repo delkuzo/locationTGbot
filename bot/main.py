@@ -155,6 +155,38 @@ async def webhook_info():
         return {"error": str(e)}
 
 
+@app.post("/webhook/set")
+async def set_webhook(request: Request):
+    """Manually set webhook URL."""
+    try:
+        data = await request.json()
+        webhook_url = data.get("url")
+        
+        if not webhook_url:
+            return {"error": "URL is required"}
+        
+        if application.bot:
+            await application.bot.set_webhook(webhook_url)
+            return {"success": True, "webhook_url": webhook_url}
+        else:
+            return {"error": "Bot not initialized"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/webhook/delete")
+async def delete_webhook():
+    """Delete webhook (for testing)."""
+    try:
+        if application.bot:
+            await application.bot.delete_webhook()
+            return {"success": True, "message": "Webhook deleted"}
+        else:
+            return {"error": "Bot not initialized"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 @app.post("/webhook")
 async def webhook(request: Request):
     """Handle Telegram webhook updates."""
