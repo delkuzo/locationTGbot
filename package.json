@@ -1,0 +1,7 @@
+{
+  "name": "location-tg-bot",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "python main_simple.py"
+  }
+} 
