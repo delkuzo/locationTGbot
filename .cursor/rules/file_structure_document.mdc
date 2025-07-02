@@ -1,0 +1,34 @@
+---
+
+description: "Target file structure"
+alwaysApply: true
+-----------------
+
+## Папка → назначение
+
+| Папка              | Назначение                                                                         |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| /bot               | Исходный код Telegram‑бота (FastAPI + обработчики)                                 |
+| /bot/handlers      | Функции‑хендлеры для отдельных типов апдейтов (location, live\_location, commands) |
+| /bot/services      | Обёртки для внешних сервисов (OpenAI, кеш, rate‑limit)                             |
+| /config            | Конфигурация (dotenv примеры, schemas, constants)                                  |
+| /infra             | Скрипты деплоя, Dockerfile, railway.json                                           |
+| /tests             | Pytest‑тесты и фикстуры                                                            |
+| /docs              | Проектная документация и схемы                                                     |
+| /.github/workflows | CI‑пайплайны (lint, tests, deploy)                                                 |
+
+## Главные файлы
+
+* **bot/main.py** — точка входа FastAPI‑сервер для вебхука Telegram.
+* **requirements.txt** — список зависимостей для pip/Heroku buildpack.
+* **pyproject.toml** — конфигурация проекта, указание версии Python, black, ruff.
+* **Dockerfile** — образ приложения для Railway.
+* **railway.json** — описание‑манифест Railway (env vars, здоровье, стартовый cmd).
+* **README.md** — пошаговая инструкция: настройка, запуск локально, деплой.
+
+## Генерируй новые файлы здесь
+
+* `/bot/handlers`
+* `/bot/services`
+* `/tests`
+* `/docs`

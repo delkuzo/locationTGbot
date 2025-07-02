@@ -1,0 +1,95 @@
+# Implementation Plan
+
+> **Note**: Every task begins with a status label (`TODO` / `DONE`). Start work from the first `TODO` item.
+
+---
+
+## Milestone 1 – Project Bootstrap
+
+* **Target date**: *T+0.5 h*
+
+* TODO: Initialize a new Git repository and make the initial commit.
+
+* TODO: Create **.gitignore** **before** the first commit (include `.env`, virtual‑env folders, `__pycache__`, etc.).
+
+* TODO: Add **.env.example** with placeholders for `TELEGRAM_BOT_TOKEN`, `OPENAI_API_KEY`, `WEBHOOK_URL`.
+
+* TODO: Generate **pyproject.toml** with project metadata; add dependencies: `python-telegram-bot==21.5`, `openai>=1.14`, `python-dotenv>=1.0`, `httpx`, `aiolimiter`, `ruff`, `black`.
+
+* TODO: Scaffold directory structure exactly as described in `file_structure_document.mdc`.
+
+* TODO: Commit initial structure and push to GitHub.
+
+---
+
+## Milestone 2 – Core Bot Functionality (v1.0)
+
+* **Target date**: *T+2 h*
+
+* TODO: Implement **config loader** (`config/settings.py`) using `python-dotenv` to read environment variables.
+
+* TODO: Create FastAPI entry point (`bot/main.py`) that builds a `python‑telegram‑bot` `Application`, mounts webhook routes, and **does NOT** call `asyncio.run()`; use `application.run_webhook()` directly.
+
+* TODO: Implement **location handler** (`bot/handlers/location.py`) that extracts `latitude` & `longitude` and calls the OpenAI service.
+
+* TODO: Implement **OpenAI client** (`bot/services/openai_client.py`) that calls `gpt‑4o‑mini` with the geo‑prompt and returns a trimmed fact.
+
+* TODO: Add **rate‑limit middleware** (e.g., `aiolimiter`) to enforce ≤1 prompt / 5 s per user.
+
+* TODO: Implement basic **error handler** for GPT timeouts or failures.
+
+* TODO: Local test with Telegram test chat, verify single‑location flow end‑to‑end.
+
+* TODO: Add **unit tests** for OpenAI client and location handler (pytest).
+
+---
+
+## Milestone 3 – Deployment, CI/CD & Quality Gates
+
+* **Target date**: *T+3 h*
+
+* TODO: Write **Dockerfile** (python:3.12‑slim) following correct editable‑install order:
+
+  1. `COPY pyproject.toml ./`
+  2. `COPY src/ ./src/`
+  3. `RUN pip install --no-cache-dir -e .`
+
+* TODO: Create **.dockerignore** to exclude cache, venv, tests, assets.
+
+* TODO: Add Railway service (Docker deployment) and set environment variables in Railway dashboard.
+
+* TODO: Configure **GitHub Actions** workflow: lint (ruff), format check (black --check), tests (pytest), build & push Docker image, deploy to Railway.
+
+* TODO: Update **README.md** with local run, test and deploy instructions.
+
+---
+
+## Milestone 4 – Live Location Feature (v1.1)
+
+* **Target date**: *T+5 h*
+
+* TODO: Add **live‑location handler** (`bot/handlers/live_location.py`) to receive `edited_message.location` updates.
+
+* TODO: Implement **scheduler service** that every 10 min queries OpenAI with the latest coordinates until `/stop` or `live_period` expires.
+
+* TODO: Implement `/stop` command handler to cancel the job and acknowledge the user.
+
+* TODO: Extend unit tests and update documentation.
+
+---
+
+## Acceptance Checklist
+
+* [ ] All environment variables are loaded via `python‑dotenv`, no secrets in repo.
+* [ ] `GET /health` or `/start` shows bot is alive.
+* [ ] Static location → fact flow responds within 2 seconds on Railway.
+* [ ] Rate‑limit enforced (second quick send receives polite warning).
+* [ ] Docker image builds locally and in CI with no cache errors.
+* [ ] Railway deployment auto‑updates from main branch.
+* [ ] Live‑location updates send a new fact every 10 minutes and stop correctly.
+* [ ] Codebase passes **ruff** lint and **black** formatting; CI green.
+* [ ] Unit tests cover ≥80 % of `bot/services` and `bot/handlers`.
+
+---
+
+> **@Cursor**: После завершения задачи поменяй её статус на DONE и добавь краткий маркер «// done by Cursor» с описанием, что именно сделано.
