@@ -24,7 +24,6 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # Copy project files
 COPY bot/ ./bot/
 COPY config/ ./config/
-COPY tests/ ./tests/
 COPY pyproject.toml .
 
 # Create non-root user

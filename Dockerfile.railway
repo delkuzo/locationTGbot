@@ -32,7 +32,6 @@ COPY --from=builder /root/.local /home/botuser/.local
 # Copy application code
 COPY bot/ ./bot/
 COPY config/ ./config/
-COPY tests/ ./tests/
 COPY pyproject.toml .
 
 # Create non-root user
