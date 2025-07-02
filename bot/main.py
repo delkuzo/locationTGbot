@@ -12,14 +12,23 @@ from telegram.ext import (
     filters,
 )
 
+import os
+print(f"Starting application...")
+print(f"Current directory: {os.getcwd()}")
+print(f"Python path: {os.environ.get('PYTHONPATH', 'Not set')}")
+print(f"PORT: {os.environ.get('PORT', 'Not set')}")
+
 try:
     from bot.handlers.location import handle_help, handle_location, handle_start
     from config.settings import settings
+    print("Successfully imported all modules")
 except ImportError as e:
     print(f"Import error: {e}")
-    import os
-    print(f"Current directory: {os.getcwd()}")
     print(f"Directory contents: {os.listdir('.')}")
+    if os.path.exists('bot'):
+        print(f"Bot directory contents: {os.listdir('bot')}")
+    if os.path.exists('config'):
+        print(f"Config directory contents: {os.listdir('config')}")
     raise
 
 # Configure logging
