@@ -12,13 +12,20 @@ from telegram.ext import (
     filters,
 )
 
-from bot.handlers.location import handle_help, handle_location, handle_start
-from config.settings import settings
+try:
+    from bot.handlers.location import handle_help, handle_location, handle_start
+    from config.settings import settings
+except ImportError as e:
+    print(f"Import error: {e}")
+    import os
+    print(f"Current directory: {os.getcwd()}")
+    print(f"Directory contents: {os.listdir('.')}")
+    raise
 
 # Configure logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=getattr(logging, settings.log_level),
+    level=getattr(logging, settings.log_level, logging.INFO),
     stream=sys.stdout,
 )
 logger = logging.getLogger(__name__)
