@@ -25,9 +25,12 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 COPY bot/ ./bot/
 COPY config/ ./config/
 COPY pyproject.toml .
+COPY start.sh .
 
 # Create non-root user
-RUN useradd -m -u 1000 botuser && chown -R botuser:botuser /app
+RUN useradd -m -u 1000 botuser && \
+    chmod +x start.sh && \
+    chown -R botuser:botuser /app
 
 # Switch to non-root user
 USER botuser
@@ -38,10 +41,6 @@ EXPOSE 8000
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
-
-# Make start script executable
-COPY start.sh .
-RUN chmod +x start.sh
 
 # Run the application
 CMD ["./start.sh"] 

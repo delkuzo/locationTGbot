@@ -33,9 +33,12 @@ COPY --from=builder /root/.local /home/botuser/.local
 COPY bot/ ./bot/
 COPY config/ ./config/
 COPY pyproject.toml .
+COPY start.sh .
 
 # Create non-root user
-RUN useradd -m -u 1000 botuser && chown -R botuser:botuser /app /home/botuser
+RUN useradd -m -u 1000 botuser && \
+    chmod +x start.sh && \
+    chown -R botuser:botuser /app /home/botuser
 
 # Switch to non-root user
 USER botuser
@@ -44,4 +47,4 @@ USER botuser
 EXPOSE ${PORT:-8000}
 
 # Run the application
-CMD python -m uvicorn bot.main:app --host 0.0.0.0 --port ${PORT:-8000} 
+CMD ["./start.sh"] 
